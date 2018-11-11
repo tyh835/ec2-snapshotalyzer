@@ -1,32 +1,5 @@
-import boto3
 import click
-
-session = boto3.Session()
-ec2 = session.resource('ec2')
-
-def set_defaults(region=None, profile=None, **kwargs):
-    if profile:
-        global session
-        session = boto3.Session(profile_name=profile)
-
-    if region:
-        global ec2
-        ec2 = session.resource('ec2', region_name=region)
-
-    return
-
-
-def filter_instances(project):
-    instances = []
-
-    if project:
-        filters = [{'Name':'tag:Project', 'Values':[project]}]
-        instances = ec2.instances.filter(Filters=filters)
-    else:
-        instances = ec2.instances.all()
-
-    return instances
-
+from utils import set_defaults, filter_instances
 
 @click.group()
 def cli():
@@ -53,8 +26,8 @@ def ls():
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def list_instances(project, **kwargs):
     """List EC2 instances [options]"""
-    set_defaults(**kwargs)
-    instances = filter_instances(project)
+    ec2 = set_defaults(**kwargs)
+    instances = filter_instances(project, ec2)
 
     for i in instances:
         tags = { t['Key']: t['Value'] for t in i.tags or [] }
@@ -77,8 +50,8 @@ def list_instances(project, **kwargs):
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def list_volumes(project, **kwargs):
     """List EBS volumes [options]"""
-    set_defaults(**kwargs)
-    instances = filter_instances(project)
+    ec2 = set_defaults(**kwargs)
+    instances = filter_instances(project, ec2)
 
     for i in instances:
         tags = { t['Key']: t['Value'] for t in i.tags or [] }
@@ -114,8 +87,8 @@ def start():
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def start_instances(project, **kwargs):
     """Start EC2 instances in the default region, [options]"""
-    set_defaults(**kwargs)
-    instances = filter_instances(project)
+    ec2 = set_defaults(**kwargs)
+    instances = filter_instances(project, ec2)
 
     for i in instances:
         print('Starting {0}...'.format(i.id))
@@ -131,7 +104,7 @@ def start_instances(project, **kwargs):
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def start_instance(id, **kwargs):
     """Start a specific EC2 instance in the default region, [options]"""
-    set_defaults(**kwargs)
+    ec2 = set_defaults(**kwargs)
 
     if not id:
         print('--id is a required parameter')
@@ -166,8 +139,8 @@ def stop():
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def stop_instances(project, **kwargs):
     """Stop EC2 instances in the default region, [options]"""
-    set_defaults(**kwargs)
-    instances = filter_instances(project)
+    ec2 = set_defaults(**kwargs)
+    instances = filter_instances(project, ec2)
 
     for i in instances:
         print('Stopping {0}...'.format(i.id))
@@ -183,7 +156,7 @@ def stop_instances(project, **kwargs):
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def stop_instance(id, **kwargs):
     """Start a specific EC2 instance in the default region, [options]"""
-    set_defaults(**kwargs)
+    ec2 = set_defaults(**kwargs)
 
     if not id:
         print('--id is a required parameter')
