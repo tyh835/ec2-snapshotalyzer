@@ -1,12 +1,38 @@
 import boto3
 import click
 
-session = boto3.Session(profile_name='snappy')
+session = boto3.Session()
 ec2 = session.resource('ec2')
 
+
+def set_defaults(region=None, profile=None, **kwargs):
+    if profile:
+        global session
+        session = boto3.Session(profile_name=profile)
+
+    if region:
+        global ec2
+        ec2 = session.resource('ec2', region_name=region)
+
+    return
+
+
 @click.group()
-def instances():
-    """Commands for instances"""
+def cli():
+    """Snappy manages EC2 instances and EBS snapshots"""
+    pass
+
+
+"""
+***
+*** Snappy list commands
+***
+"""
+@cli.group('list')
+def ls():
+    """Commands for listing instances, volumes, and snapshots"""
+    pass
+
 
 def filter_instances(project):
     instances = []
@@ -19,10 +45,15 @@ def filter_instances(project):
 
     return instances
 
-@instances.command('list')
-@click.option('--project', default=None, help='Only instances for the project (tag Project:<name>)')
-def list_instances(project):
-    """List EC2 instances in default region, --project <name> to filter by 'Project' tag"""
+
+# list instances
+@ls.command('instances')
+@click.option('--project', default=None, help='Show only instances for the project (tag Project:<Name>)')
+@click.option('--region', default=None, help='Specify the AWS region of the resources.')
+@click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
+def list_instances(project, **kwargs):
+    """List EC2 instances [options]"""
+    set_defaults(**kwargs)
     instances = filter_instances(project)
 
     for i in instances:
@@ -35,13 +66,105 @@ def list_instances(project):
             i.public_dns_name,
             tags.get('Project', '<no project>')
         ]))
+
     return
 
 
-@instances.command('stop')
-@click.option('--project', default=None, help='Only instances for the project (tag Project:<name>)')
-def stop_instances(project):
-    """Stop EC2 instances in the default region, --project <name> to filter by 'Project' tag"""
+# lsit volumes
+@ls.command('volumes')
+@click.option('--project', default=None, help='Show only volumes attached to instances of the project (tag Project:<Name>)')
+@click.option('--region', default=None, help='Specify the AWS region of the resources.')
+@click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
+def list_volumes(project, **kwargs):
+    """List EBS volumes [options]"""
+    set_defaults(**kwargs)
+    instances = filter_instances(project)
+
+    for i in instances:
+        tags = { t['Key']: t['Value'] for t in i.tags or [] }
+        for v in i.volumes.all():
+            print(', '.join([
+            v.id,
+            i.id,
+            v.state,
+            str(v.size) + 'GiB',
+            v.encrypted and 'Encrpyted' or 'Not Encrypted',
+            tags.get('Project', '<no project>')
+        ]))
+
+    return
+
+
+"""
+***
+*** Snappy start commands
+***
+"""
+@cli.group('start')
+def start():
+    """Commands for starting instances"""
+    pass
+
+
+# start instances
+@start.command('instances')
+@click.option('--project', default=None, help='Start only instances for the project (tag Project:<Name>)')
+@click.option('--region', default=None, help='Specify the AWS region of the resources.')
+@click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
+def start_instances(project, **kwargs):
+    """Start EC2 instances in the default region, [options]"""
+    set_defaults(**kwargs)
+    instances = filter_instances(project)
+
+    for i in instances:
+        print('Starting {0}...'.format(i.id))
+        i.start()
+
+    return
+
+
+#start instance
+@start.command('instance')
+@click.option('--id', default=None, help='Start only the instance with specified --id (required)')
+@click.option('--region', default=None, help='Specify the AWS region of the resources.')
+@click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
+def start_instance(id, **kwargs):
+    """Start EC2 instance in the default region, [options] --id (required)"""
+    set_defaults(**kwargs)
+
+    if not id:
+        print('--id is a required parameter')
+        return
+
+    try:
+        instance = ec2.Instance(id)
+        print('Starting {0}...'.format(instance.id))
+        instance.start()
+    except:
+        print('Failed to start {0}... Please ensure that the id is correct and you are using the correct region'.format(instance.id))
+
+    return
+
+
+"""
+***
+*** Snappy stop commands
+***
+"""
+@cli.group('stop')
+def stop():
+    """Commands for stopping instances"""
+    pass
+
+
+# stop instances
+@stop.command('instances')
+@click.option('--project', default=None, help='Stop only instances for the project (tag Project:<Name>)')
+@click.option('--region', default=None, help='Specify the AWS region of the resources.')
+@click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
+def stop_instances(project, **kwargs):
+    """Stop EC2 instances in the default region, [options]"""
+    set_defaults(**kwargs)
     instances = filter_instances(project)
 
     for i in instances:
@@ -51,17 +174,28 @@ def stop_instances(project):
     return
 
 
-@instances.command('start')
-@click.option('--project', default=None, help='Only instances for the project (tag Project:<name>)')
-def start_instances(project):
-    """Start EC2 instances in the default region, --project <name> to filter by 'Project' tag"""
-    instances = filter_instances(project)
+# stop instance
+@stop.command('instance')
+@click.option('--id', default=None, help='Stop only the instance with specified --id (required)')
+@click.option('--region', default=None, help='Specify the AWS region of the resources.')
+@click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
+def stop_instance(id, **kwargs):
+    """Start EC2 instance in the default region, [options] --id (required)"""
+    set_defaults(**kwargs)
 
-    for i in instances:
-        print('Starting {0}...'.format(i.id))
-        i.start()
+    if not id:
+        print('--id is a required parameter')
+        return
+
+    try:
+        instance = ec2.Instance(id)
+        print('Stopping {0}...'.format(instance.id))
+        instance.stop()
+    except:
+        print('Failed to stop {0}... Please ensure that the id is correct and you are using the correct region'.format(instance.id))
 
     return
 
+
 if __name__ == '__main__':
-    instances()
+    cli()
