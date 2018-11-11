@@ -130,7 +130,7 @@ def start_instances(project, **kwargs):
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def start_instance(id, **kwargs):
-    """Start EC2 instance in the default region, [options] --id (required)"""
+    """Start a specific EC2 instance in the default region, [options]"""
     set_defaults(**kwargs)
 
     if not id:
@@ -182,7 +182,7 @@ def stop_instances(project, **kwargs):
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def stop_instance(id, **kwargs):
-    """Start EC2 instance in the default region, [options] --id (required)"""
+    """Start a specific EC2 instance in the default region, [options]"""
     set_defaults(**kwargs)
 
     if not id:
