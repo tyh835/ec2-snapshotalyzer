@@ -1,10 +1,11 @@
 import click
-from utils import (
+from utils import filter_instances
+from setup import (
     session,
     ec2,
-    set_defaults,
-    filter_instances
+    set_defaults
 )
+
 
 @click.group()
 def cli():
