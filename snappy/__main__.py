@@ -9,7 +9,11 @@ from client import (
 
 @click.group()
 def cli():
-    """Snappy manages EC2 instances and EBS snapshots"""
+    """
+    Snappy manages EC2 instances and EBS snapshots
+
+    Append [options] to the end of the command
+    """
     pass
 
 
