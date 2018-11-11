@@ -1,9 +1,10 @@
 import click
-from utils import (
+from utils import print_instances, print_volumes
+from client import (
     set_client,
     filter_instances,
-    print_instances,
-    print_volumes
+    start_instance_by_id,
+    stop_instance_by_id
 )
 
 @click.group()
@@ -73,8 +74,7 @@ def start_instances(project, **kwargs):
     instances = filter_instances(project, ec2)
 
     for i in instances:
-        print('Starting {0}...'.format(i.id))
-        i.start()
+        start_instance_by_id(i.id, ec2)
 
     return
 
@@ -88,18 +88,7 @@ def start_instance(id, **kwargs):
     """Start a specific EC2 instance in the default region, [options]"""
     ec2 = set_client(**kwargs)
 
-    if not id:
-        print('--id is a required parameter')
-        return
-
-    try:
-        instance = ec2.Instance(id)
-        print('Starting {0}...'.format(instance.id))
-        instance.start()
-    except:
-        print('Failed to start {0}... Please ensure that the id is correct and you are using the correct region'.format(instance.id))
-
-    return
+    return start_instance_by_id(id, ec2)
 
 
 """
@@ -125,8 +114,7 @@ def stop_instances(project, **kwargs):
     instances = filter_instances(project, ec2)
 
     for i in instances:
-        print('Stopping {0}...'.format(i.id))
-        i.stop()
+        stop_instance_by_id(i.id, ec2)
 
     return
 
@@ -140,18 +128,7 @@ def stop_instance(id, **kwargs):
     """Start a specific EC2 instance in the default region, [options]"""
     ec2 = set_client(**kwargs)
 
-    if not id:
-        print('--id is a required parameter')
-        return
-
-    try:
-        instance = ec2.Instance(id)
-        print('Stopping {0}...'.format(instance.id))
-        instance.stop()
-    except:
-        print('Failed to stop {0}... Please ensure that the id is correct and you are using the correct region'.format(instance.id))
-
-    return
+    return stop_instance_by_id(id, ec2)
 
 
 if __name__ == '__main__':
