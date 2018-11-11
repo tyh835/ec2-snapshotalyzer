@@ -1,7 +1,7 @@
 import boto3
 
 
-def set_defaults(region=None, profile=None, **kwargs):
+def set_client(region=None, profile=None, **kwargs):
     session = boto3.Session()
     ec2 = session.resource('ec2')
 

@@ -1,5 +1,5 @@
 import click
-from utils import set_defaults, filter_instances
+from utils import set_client, filter_instances
 
 @click.group()
 def cli():
@@ -26,7 +26,7 @@ def ls():
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def list_instances(project, **kwargs):
     """List EC2 instances [options]"""
-    ec2 = set_defaults(**kwargs)
+    ec2 = set_client(**kwargs)
     instances = filter_instances(project, ec2)
 
     for i in instances:
@@ -50,7 +50,7 @@ def list_instances(project, **kwargs):
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def list_volumes(project, **kwargs):
     """List EBS volumes [options]"""
-    ec2 = set_defaults(**kwargs)
+    ec2 = set_client(**kwargs)
     instances = filter_instances(project, ec2)
 
     for i in instances:
@@ -87,7 +87,7 @@ def start():
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def start_instances(project, **kwargs):
     """Start EC2 instances in the default region, [options]"""
-    ec2 = set_defaults(**kwargs)
+    ec2 = set_client(**kwargs)
     instances = filter_instances(project, ec2)
 
     for i in instances:
@@ -104,7 +104,7 @@ def start_instances(project, **kwargs):
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def start_instance(id, **kwargs):
     """Start a specific EC2 instance in the default region, [options]"""
-    ec2 = set_defaults(**kwargs)
+    ec2 = set_client(**kwargs)
 
     if not id:
         print('--id is a required parameter')
@@ -139,7 +139,7 @@ def stop():
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def stop_instances(project, **kwargs):
     """Stop EC2 instances in the default region, [options]"""
-    ec2 = set_defaults(**kwargs)
+    ec2 = set_client(**kwargs)
     instances = filter_instances(project, ec2)
 
     for i in instances:
@@ -156,7 +156,7 @@ def stop_instances(project, **kwargs):
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def stop_instance(id, **kwargs):
     """Start a specific EC2 instance in the default region, [options]"""
-    ec2 = set_defaults(**kwargs)
+    ec2 = set_client(**kwargs)
 
     if not id:
         print('--id is a required parameter')
