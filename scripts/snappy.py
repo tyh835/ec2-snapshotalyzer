@@ -1,5 +1,10 @@
 import click
-from utils import set_client, filter_instances
+from utils import (
+    set_client,
+    filter_instances,
+    print_instances,
+    print_volumes
+)
 
 @click.group()
 def cli():
@@ -29,18 +34,7 @@ def list_instances(project, **kwargs):
     ec2 = set_client(**kwargs)
     instances = filter_instances(project, ec2)
 
-    for i in instances:
-        tags = { t['Key']: t['Value'] for t in i.tags or [] }
-        print(', '.join([
-            i.id,
-            i.instance_type,
-            i.placement['AvailabilityZone'],
-            i.state['Name'],
-            i.public_dns_name,
-            tags.get('Project', '<no project>')
-        ]))
-
-    return
+    return print_instances(instances)
 
 
 # list volumes
@@ -53,19 +47,7 @@ def list_volumes(project, **kwargs):
     ec2 = set_client(**kwargs)
     instances = filter_instances(project, ec2)
 
-    for i in instances:
-        tags = { t['Key']: t['Value'] for t in i.tags or [] }
-        for v in i.volumes.all():
-            print(', '.join([
-            v.id,
-            i.id,
-            v.state,
-            str(v.size) + 'GiB',
-            v.encrypted and 'Encrpyted' or 'Not Encrypted',
-            tags.get('Project', '<no project>')
-        ]))
-
-    return
+    return print_volumes(instances)
 
 
 """
