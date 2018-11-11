@@ -1,21 +1,10 @@
-import boto3
 import click
-
-session = boto3.Session()
-ec2 = session.resource('ec2')
-
-
-def set_defaults(region=None, profile=None, **kwargs):
-    if profile:
-        global session
-        session = boto3.Session(profile_name=profile)
-
-    if region:
-        global ec2
-        ec2 = session.resource('ec2', region_name=region)
-
-    return
-
+from utils import (
+    session,
+    ec2,
+    set_defaults,
+    filter_instances
+)
 
 @click.group()
 def cli():
@@ -28,22 +17,11 @@ def cli():
 *** Snappy list commands
 ***
 """
+
 @cli.group('list')
 def ls():
     """Commands for listing instances, volumes, and snapshots"""
     pass
-
-
-def filter_instances(project):
-    instances = []
-
-    if project:
-        filters = [{'Name':'tag:Project', 'Values':[project]}]
-        instances = ec2.instances.filter(Filters=filters)
-    else:
-        instances = ec2.instances.all()
-
-    return instances
 
 
 # list instances
@@ -70,7 +48,7 @@ def list_instances(project, **kwargs):
     return
 
 
-# lsit volumes
+# list volumes
 @ls.command('volumes')
 @click.option('--project', default=None, help='Show only volumes attached to instances of the project (tag Project:<Name>)')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
@@ -100,6 +78,7 @@ def list_volumes(project, **kwargs):
 *** Snappy start commands
 ***
 """
+
 @cli.group('start')
 def start():
     """Commands for starting instances"""
@@ -123,7 +102,7 @@ def start_instances(project, **kwargs):
     return
 
 
-#start instance
+# start instance --id
 @start.command('instance')
 @click.option('--id', default=None, help='Start only the instance with specified --id (required)')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
@@ -151,6 +130,7 @@ def start_instance(id, **kwargs):
 *** Snappy stop commands
 ***
 """
+
 @cli.group('stop')
 def stop():
     """Commands for stopping instances"""
@@ -174,7 +154,7 @@ def stop_instances(project, **kwargs):
     return
 
 
-# stop instance
+# stop instance --id
 @stop.command('instance')
 @click.option('--id', default=None, help='Stop only the instance with specified --id (required)')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
