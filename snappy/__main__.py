@@ -39,7 +39,9 @@ def list_instances(project, **kwargs):
     ec2 = set_client(**kwargs)
     instances = filter_instances(project, ec2)
 
-    return print_instances(instances)
+    print_instances(instances)
+
+    return
 
 
 # list volumes
@@ -52,7 +54,9 @@ def list_volumes(project, **kwargs):
     ec2 = set_client(**kwargs)
     instances = filter_instances(project, ec2)
 
-    return print_volumes(instances)
+    print_volumes(instances)
+
+    return
 
 
 """
@@ -92,7 +96,9 @@ def start_instance(id, **kwargs):
     """Start a specific EC2 instance in the default region, [options]"""
     ec2 = set_client(**kwargs)
 
-    return start_instance_by_id(id, ec2)
+    start_instance_by_id(id, ec2)
+
+    return
 
 
 """
@@ -132,7 +138,9 @@ def stop_instance(id, **kwargs):
     """Start a specific EC2 instance in the default region, [options]"""
     ec2 = set_client(**kwargs)
 
-    return stop_instance_by_id(id, ec2)
+    stop_instance_by_id(id, ec2)
+
+    return
 
 
 if __name__ == '__main__':
