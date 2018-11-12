@@ -26,13 +26,9 @@ def filter_instances(project, ec2):
     return instances
 
 
-def start_instance_by_id(id, ec2):
-    if not id:
-        print('Error: --id is a required parameter')
-        return
-
+def start_instance(ec2, id=None, instance=None):
     try:
-        instance = ec2.Instance(id)
+        instance = instance or ec2.Instance(id)
         print('Starting {0}...'.format(instance.id))
         instance.start()
     except:
@@ -41,13 +37,9 @@ def start_instance_by_id(id, ec2):
     return
 
 
-def stop_instance_by_id(id, ec2):
-    if not id:
-        print('Error: --id is a required parameter')
-        return
-
+def stop_instance(ec2, id=None, instance=None):
     try:
-        instance = ec2.Instance(id)
+        instance = instance or ec2.Instance(id)
         print('Stopping {0}...'.format(instance.id))
         instance.stop()
     except:

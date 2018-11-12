@@ -3,8 +3,8 @@ from utils import print_instances, print_volumes
 from client import (
     set_client,
     filter_instances,
-    start_instance_by_id,
-    stop_instance_by_id
+    start_instance,
+    stop_instance
 )
 
 @click.group()
@@ -81,8 +81,8 @@ def start_instances(project, **kwargs):
     ec2 = set_client(**kwargs)
     instances = filter_instances(project, ec2)
 
-    for i in instances:
-        start_instance_by_id(i.id, ec2)
+    for instance in instances:
+        start_instance(ec2, instance=instance)
 
     return
 
@@ -92,11 +92,15 @@ def start_instances(project, **kwargs):
 @click.option('--id', default=None, help='Start only the instance with specified --id (required)')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def start_instance(id, **kwargs):
+def start_instance_by_id(id, **kwargs):
     """Start a specific EC2 instance in the default region, [options]"""
+    if not id:
+        print('Error: --id is a required parameter')
+        return
+
     ec2 = set_client(**kwargs)
 
-    start_instance_by_id(id, ec2)
+    start_instance(ec2, id=id)
 
     return
 
@@ -123,8 +127,8 @@ def stop_instances(project, **kwargs):
     ec2 = set_client(**kwargs)
     instances = filter_instances(project, ec2)
 
-    for i in instances:
-        stop_instance_by_id(i.id, ec2)
+    for instance in instances:
+        stop_instance(ec2, instance=instance)
 
     return
 
@@ -134,11 +138,15 @@ def stop_instances(project, **kwargs):
 @click.option('--id', default=None, help='Stop only the instance with specified --id (required)')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def stop_instance(id, **kwargs):
+def stop_instance_by_id(id, **kwargs):
     """Start a specific EC2 instance in the default region, [options]"""
+    if not id:
+        print('Error: --id is a required parameter')
+        return
+
     ec2 = set_client(**kwargs)
 
-    stop_instance_by_id(id, ec2)
+    stop_instance(ec2, id=id)
 
     return
 
