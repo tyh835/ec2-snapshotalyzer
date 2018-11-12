@@ -4,7 +4,7 @@ Manage AWS EC2 instance snapshots.
 
 ## About
 
-This project uses `boto3` to manage AWS EC2 instance snapshots.
+This project is a CLI using `boto3` to manage AWS EC2 instance snapshots.
 
 ## Configuring
 
