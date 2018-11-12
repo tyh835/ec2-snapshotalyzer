@@ -27,8 +27,8 @@ def filter_instances(project, ec2):
 
 
 def start_instance(ec2, id=None, instance=None):
+    instance = instance or ec2.Instance(id)
     try:
-        instance = instance or ec2.Instance(id)
         print('Starting {0}...'.format(instance.id))
         instance.start()
     except:
@@ -38,8 +38,8 @@ def start_instance(ec2, id=None, instance=None):
 
 
 def stop_instance(ec2, id=None, instance=None):
+    instance = instance or ec2.Instance(id)
     try:
-        instance = instance or ec2.Instance(id)
         print('Stopping {0}...'.format(instance.id))
         instance.stop()
     except:
@@ -48,12 +48,20 @@ def stop_instance(ec2, id=None, instance=None):
     return
 
 
-def create_snapshot(ec2, id=None, volume=None):
+def create_snapshot(ec2, id=None, instance=None):
+    instance = instance or ec2.Instance(id)
     try:
-        volume = volume or ec2.Volume(id)
-        print('Creating snapshot {0}...'.format(volume.id))
-        volume.create_snapshot(Description='Created by Snappy')
+        print('Stopping {0}...'.format(instance.id))
+        instance.stop()
+        instance.wait_until_stopped()
+        for volume in instance.volumes.all():
+            print('Creating snapshot {0}...'.format(volume.id))
+            volume.create_snapshot(Description='Created by Snappy')
+        print('Restarting {0}...'.format(instance.id))
+        instance.start()
+        instance.wait_until_running()
+        print('Success')
     except:
-        print('Failed to create snapshot of {0}... Please ensure that the id is correct and you are using the correct region'.format(volume.id))
+        print('Failed to create snapshot of {0}... Please ensure that the id is correct and you are using the correct region'.format(instance.id))
 
     return

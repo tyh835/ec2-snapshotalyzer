@@ -48,12 +48,18 @@ def list_instances(project, **kwargs):
 # list volumes
 @ls.command('volumes')
 @click.option('--project', default=None, help='Show only volumes attached to instances of the project (tag Project:<Name>)')
+@click.option('--id', default=None, help='Show only volumes of specific instance by id')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def list_volumes(project, **kwargs):
+def list_volumes(project, id, **kwargs):
     """List EBS volumes [options]"""
+    instances = []
     ec2 = set_client(**kwargs)
-    instances = filter_instances(project, ec2)
+
+    if id:
+        instances = [ec2.Instance(id)]
+    else:
+        instances = filter_instances(project, ec2)
 
     print_volumes(instances)
 
@@ -62,13 +68,19 @@ def list_volumes(project, **kwargs):
 
 # list snapshots
 @ls.command('snapshots')
-@click.option('--project', default=None, help='Show only volumes attached to instances of the project (tag Project:<Name>)')
+@click.option('--project', default=None, help='Show only snapshots for the instances of the project (tag Project:<Name>)')
+@click.option('--id', default=None, help='Show only snapshots of specific instance by id')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def list_snapshots(project, **kwargs):
-    """List EBS volumes [options]"""
+def list_snapshots(project, id=None, **kwargs):
+    """List EBS snapshots [options]"""
+    instances = []
     ec2 = set_client(**kwargs)
-    instances = filter_instances(project, ec2)
+
+    if id:
+        instances = [ec2.Instance(id)]
+    else:
+        instances = filter_instances(project, ec2)
 
     print_snapshots(instances)
 
@@ -190,8 +202,7 @@ def create_snapshots(project, **kwargs):
     instances = filter_instances(project, ec2)
 
     for instance in instances:
-        for volume in instance.volumes.all():
-            create_snapshot(ec2, volume=volume)
+        create_snapshot(ec2, instance=instance)
 
     return
 
