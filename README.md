@@ -12,11 +12,18 @@ Use the configuration file created by the AWS CLI. e.g.
 
 `aws configure --profile snappy`
 
-This profile should have access to list EC2 instances, start and stop EC2 instances, and filter EC2 instances by tag.
+This profile should have full-access to AWS EC2 (more restrictive permissions pending).
 
 ## Running
 
-`pipenv run python scripts/snappy.py <command> <--project=PROJECT>`
+`pipenv run python scripts/snappy.py <command> <resource> <options>`
 
-*command* can be list, start, or stop.
-*project* is optional, and represents the "Project" tag on EC2 instances.
+*command* can be list, start, stop, or create.
+*resource* can be instance(s), volume(s), or snapshot(s) when appropriate.
+
+### Options
+
+*--project* is optional, and represents the "Project" tag on the EC2 instances.
+*--id* specifies the AWS id of the AWS resource.
+*--region* specifies the AWS region of the resources.
+*--profile* specifies the AWS profile to use as credentials.

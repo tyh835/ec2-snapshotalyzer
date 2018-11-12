@@ -46,3 +46,14 @@ def stop_instance(ec2, id=None, instance=None):
         print('Failed to stop {0}... Please ensure that the id is correct and you are using the correct region'.format(instance.id))
 
     return
+
+
+def create_snapshot(ec2, id=None, volume=None):
+    try:
+        volume = volume or ec2.Volume(id)
+        print('Creating snapshot {0}...'.format(volume.id))
+        volume.create_snapshot(Description='Created by Snappy')
+    except:
+        print('Failed to create snapshot of {0}... Please ensure that the id is correct and you are using the correct region'.format(volume.id))
+
+    return
