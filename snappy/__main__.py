@@ -1,6 +1,6 @@
 import click
-from utils import print_instances, print_volumes, print_snapshots
-from client import (
+from snappy.utils.utils import print_instances, print_volumes, print_snapshots
+from snappy.client.client import (
     set_client,
     filter_instances,
     start_instance,
