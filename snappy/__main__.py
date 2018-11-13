@@ -78,6 +78,7 @@ def list_snapshots(tag, id, list_all, **kwargs):
     ec2 = set_client(**kwargs)
 
     if id:
+        list_all = True
         print_snapshots([ec2.Instance(id)], list_all)
         return
 
