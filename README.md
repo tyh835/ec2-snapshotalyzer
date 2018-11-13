@@ -24,18 +24,18 @@ The profile should have full-access to AWS EC2 (more restrictive permissions pen
 
 `pipenv run python main.py <command> <resource> <options>`
 
-*command* can be list, start, stop, or create.
+`command` can be list, start, stop, or create.
 
-*resource* can be instances, volumes, or snapshots as appropriate.
+`resource` can be instances, volumes, or snapshots as appropriate.
 
 ## Options
 
-*--tag* is optional, and filters AWS resources by the tag provided (Key:Value).
+`--tag` is optional, and filters AWS resources by the tag provided (Key:Value).
 
-*--id* specifies the AWS id of the AWS resource.
+`--id` specifies the AWS id of the AWS resource.
 
-*--region* specifies the AWS region of the resources.
+`--region` specifies the AWS region of the resources.
 
-*--profile* specifies the AWS profile to use as credentials.
+`--profile` specifies the AWS profile to use as credentials.
 
 *--all* is an option for listing snapshots. Lists all snapshots rather than just most recent ones.
