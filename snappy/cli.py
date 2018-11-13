@@ -29,7 +29,7 @@ def cli():
 
 @cli.group('list')
 def ls():
-    """Commands for listing instances, volumes, and snapshots"""
+    """Command for listing instances, volumes, and snapshots"""
     pass
 
 
@@ -100,7 +100,7 @@ def list_snapshots(tag, id, list_all, **kwargs):
 
 @cli.group('start')
 def start():
-    """Commands for starting instances"""
+    """Command for starting EC2 instances"""
     pass
 
 
@@ -139,7 +139,7 @@ def start_instances(tag, id, force, **kwargs):
 
 @cli.group('stop')
 def stop():
-    """Commands for stopping instances"""
+    """Command for stopping EC2 instances"""
     pass
 
 
@@ -178,7 +178,7 @@ def stop_instances(tag, id, force, **kwargs):
 
 @cli.group('reboot')
 def reboot():
-    """Commands for rebooting instances"""
+    """Command for rebooting EC2 instances"""
     pass
 
 
@@ -217,7 +217,7 @@ def reboot_instances(tag, id, force, **kwargs):
 
 @cli.group('create')
 def create():
-    """Commands for creating snapshots"""
+    """Command for creating snapshots"""
     pass
 
 
