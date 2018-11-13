@@ -4,7 +4,7 @@ Manage AWS EC2 instance snapshots.
 
 ## About
 
-This project is a CLI using `boto3` to manage AWS EC2 instance snapshots.
+Snappy is a CLI that uses `boto3` to manage AWS EC2 instance snapshots.
 
 ## Configuring
 
@@ -19,7 +19,7 @@ This profile should have full-access to AWS EC2 (more restrictive permissions pe
 `pipenv run python scripts/snappy.py <command> <resource> <options>`
 
 *command* can be list, start, stop, or create.
-*resource* can be instance(s), volume(s), or snapshot(s) when appropriate.
+*resource* can be instance(s), volume(s), or snapshot(s) as appropriate.
 
 ### Options
 
