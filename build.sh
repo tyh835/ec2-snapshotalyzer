@@ -9,5 +9,4 @@ pipenv run python setup.py bdist_wheel
 pip3 install dist/*.whl
 
 # upload
-
 aws s3 sync dist s3://snappy-bin
