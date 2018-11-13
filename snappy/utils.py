@@ -1,14 +1,17 @@
 def print_instances(instances):
     for i in instances:
-        tags = { t['Key']: t['Value'] for t in i.tags or [] }
+        tags = []
+
+        if i.tags:
+            tags = ['{0}:{1}'.format(t['Key'], t['Value']) for t in i.tags ] or []
+
         print(', '.join([
             i.id,
             i.instance_type,
             i.placement['AvailabilityZone'],
             i.state['Name'],
             i.public_dns_name,
-            'Project: {0}'.format(tags.get('Project', '<no project>'))
-        ]))
+        ] + tags))
 
     return
 

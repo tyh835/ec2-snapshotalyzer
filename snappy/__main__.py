@@ -32,13 +32,13 @@ def ls():
 
 # list instances
 @ls.command('instances')
-@click.option('--project', default=None, help='Show only instances for the project (tag Project:<Name>)')
+@click.option('--tag', default=None, help='Show only instances for with the corresponding tag (<Key>:<Value>)')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def list_instances(project, **kwargs):
+def list_instances(tag, **kwargs):
     """List EC2 instances [options]"""
     ec2 = set_client(**kwargs)
-    instances = filter_instances(project, ec2)
+    instances = filter_instances(tag, ec2)
 
     print_instances(instances)
 
@@ -47,11 +47,11 @@ def list_instances(project, **kwargs):
 
 # list volumes
 @ls.command('volumes')
-@click.option('--project', default=None, help='Show only volumes attached to instances of the project (tag Project:<Name>)')
+@click.option('--tag', default=None, help='Show only instances for with the corresponding tag (<Key>:<Value>)')
 @click.option('--id', default=None, help='Show only volumes of specific instance by id')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def list_volumes(project, id, **kwargs):
+def list_volumes(tag, id, **kwargs):
     """List EBS volumes [options]"""
     instances = []
     ec2 = set_client(**kwargs)
@@ -59,7 +59,7 @@ def list_volumes(project, id, **kwargs):
     if id:
         instances = [ec2.Instance(id)]
     else:
-        instances = filter_instances(project, ec2)
+        instances = filter_instances(tag, ec2)
 
     print_volumes(instances)
 
@@ -68,11 +68,11 @@ def list_volumes(project, id, **kwargs):
 
 # list snapshots
 @ls.command('snapshots')
-@click.option('--project', default=None, help='Show only snapshots for the instances of the project (tag Project:<Name>)')
+@click.option('--tag', default=None, help='Show only instances for with the corresponding tag (<Key>:<Value>)')
 @click.option('--id', default=None, help='Show only snapshots of specific instance by id')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def list_snapshots(project, id=None, **kwargs):
+def list_snapshots(tag, id=None, **kwargs):
     """List EBS snapshots [options]"""
     instances = []
     ec2 = set_client(**kwargs)
@@ -80,7 +80,7 @@ def list_snapshots(project, id=None, **kwargs):
     if id:
         instances = [ec2.Instance(id)]
     else:
-        instances = filter_instances(project, ec2)
+        instances = filter_instances(tag, ec2)
 
     print_snapshots(instances)
 
@@ -101,13 +101,13 @@ def start():
 
 # start instances
 @start.command('instances')
-@click.option('--project', default=None, help='Start only instances of the project (tag Project:<Name>)')
+@click.option('--tag', default=None, help='Show only instances for with the corresponding tag (<Key>:<Value>)')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def start_instances(project, **kwargs):
+def start_instances(tag, **kwargs):
     """Start EC2 instances [options]"""
     ec2 = set_client(**kwargs)
-    instances = filter_instances(project, ec2)
+    instances = filter_instances(tag, ec2)
 
     for instance in instances:
         start_instance(ec2, instance=instance)
@@ -123,7 +123,7 @@ def start_instances(project, **kwargs):
 def start_instance_by_id(id, **kwargs):
     """Start a specific EC2 instance by id [options]"""
     if not id:
-        print('Error: --id is a required parameter')
+        print('Error: --id is a required option')
         return
 
     ec2 = set_client(**kwargs)
@@ -147,13 +147,13 @@ def stop():
 
 # stop instances
 @stop.command('instances')
-@click.option('--project', default=None, help='Stop only instances of the project (tag Project:<Name>)')
+@click.option('--tag', default=None, help='Show only instances for with the corresponding tag (<Key>:<Value>)')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def stop_instances(project, **kwargs):
+def stop_instances(tag, **kwargs):
     """Stop EC2 instances [options]"""
     ec2 = set_client(**kwargs)
-    instances = filter_instances(project, ec2)
+    instances = filter_instances(tag, ec2)
 
     for instance in instances:
         stop_instance(ec2, instance=instance)
@@ -169,7 +169,7 @@ def stop_instances(project, **kwargs):
 def stop_instance_by_id(id, **kwargs):
     """Start a specific EC2 instance by id [options]"""
     if not id:
-        print('Error: --id is a required parameter')
+        print('Error: --id is a required option')
         return
 
     ec2 = set_client(**kwargs)
@@ -193,13 +193,13 @@ def create():
 
 # create snapshots
 @create.command('snapshots')
-@click.option('--project', default=None, help='Create snapshots for only instances of the project (tag Project:<Name>)')
+@click.option('--tag', default=None, help='Show only instances for with the corresponding tag (<Key>:<Value>)')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def create_snapshots(project, **kwargs):
+def create_snapshots(tag, **kwargs):
     """Create snapshots of EC2 instances [options]"""
     ec2 = set_client(**kwargs)
-    instances = filter_instances(project, ec2)
+    instances = filter_instances(tag, ec2)
 
     for instance in instances:
         create_snapshot(ec2, instance=instance)
@@ -215,7 +215,7 @@ def create_snapshots(project, **kwargs):
 def create_snapshot_by_id(id, **kwargs):
     """Create snapshot of an EC2 instance by id [options]"""
     if not id:
-        print('Error: --id is a required parameter')
+        print('Error: --id is a required option')
         return
 
     ec2 = set_client(**kwargs)

@@ -23,7 +23,7 @@ This profile should have full-access to AWS EC2 (more restrictive permissions pe
 
 ### Options
 
-*--project* is optional, and represents the "Project" tag on the EC2 instances.
+*--tag* is optional, and filters AWS resources by the tag provided (Key:Value).
 *--id* specifies the AWS id of the AWS resource.
 *--region* specifies the AWS region of the resources.
 *--profile* specifies the AWS profile to use as credentials.

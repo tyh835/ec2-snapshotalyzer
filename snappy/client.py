@@ -1,4 +1,5 @@
 import boto3
+import botocore
 
 
 def set_client(region=None, profile=None, **kwargs):
@@ -14,12 +15,18 @@ def set_client(region=None, profile=None, **kwargs):
     return ec2
 
 
-def filter_instances(project, ec2):
+def filter_instances(tag, ec2):
     instances = []
+    if tag:
+        tag = tag.split(':')
 
-    if project:
-        filters = [{'Name':'tag:Project', 'Values':[project]}]
-        instances = ec2.instances.filter(Filters=filters)
+    if tag:
+        try:
+            filters = [{'Name':'tag:{0}'.format(tag[0]), 'Values':[tag[1]]}]
+            instances = ec2.instances.filter(Filters=filters)
+        except:
+            print('Error: please provide a valid tag (Key:Value)')
+            return instances
     else:
         instances = ec2.instances.all()
 
@@ -31,8 +38,10 @@ def start_instance(ec2, id=None, instance=None):
     try:
         print('Starting {0}...'.format(instance.id))
         instance.start()
+    except botocore.exceptions.ClientError as err:
+        print('Failed to start {0}. '.format(instance.id) + str(err))
     except:
-        print('Failed to start {0}... Please ensure that the id is correct and you are using the correct region'.format(instance.id))
+        print('Failed to start {0}. Please ensure that the id is correct and you are using the correct region'.format(instance.id))
 
     return
 
@@ -42,6 +51,8 @@ def stop_instance(ec2, id=None, instance=None):
     try:
         print('Stopping {0}...'.format(instance.id))
         instance.stop()
+    except botocore.exceptions.ClientError as err:
+        print('Failed to stop {0}. '.format(instance.id) + str(err))
     except:
         print('Failed to stop {0}... Please ensure that the id is correct and you are using the correct region'.format(instance.id))
 
