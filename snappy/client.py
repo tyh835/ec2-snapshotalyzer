@@ -1,5 +1,5 @@
 import boto3
-import botocore
+from botocore.exceptions import ClientError
 from snappy.utils import has_pending_snapshots
 
 def set_client(region=None, profile=None, **kwargs):
@@ -38,7 +38,7 @@ def start_instance(ec2, id=None, instance=None):
     try:
         print('Starting {0}...'.format(instance.id))
         instance.start()
-    except botocore.exceptions.ClientError as err:
+    except ClientError as err:
         print(' Failed to start {0}. '.format(instance.id) + str(err))
 
     return
@@ -50,8 +50,20 @@ def stop_instance(ec2, id=None, instance=None):
     try:
         print('Stopping {0}...'.format(instance.id))
         instance.stop()
-    except botocore.exceptions.ClientError as err:
+    except ClientError as err:
         print(' Failed to stop {0}. '.format(instance.id) + str(err))
+
+    return
+
+
+def reboot_instance(ec2, id=None, instance=None):
+    instance = instance or ec2.Instance(id)
+
+    try:
+        print('Rebooting {0}...'.format(instance.id))
+        instance.reboot()
+    except ClientError as err:
+        print(' Failed to reboot {0}. '.format(instance.id) + str(err))
 
     return
 
@@ -77,7 +89,7 @@ def create_snapshot(ec2, id=None, instance=None):
         instance.wait_until_running()
         print('Success')
 
-    except botocore.exceptions.ClientError as err:
+    except ClientError as err:
         print(' Failed to create snapshot of {0}. '.format(instance.id) + str(err))
 
     return

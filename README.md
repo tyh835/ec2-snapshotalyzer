@@ -1,6 +1,6 @@
 # SnapPy
 
-Version: 0.1.0
+Version: 0.2.0
 
 ## About
 
@@ -24,7 +24,7 @@ The profile should have full-access to AWS EC2 (more restrictive permissions pen
 
 `pipenv run python main.py <command> <resource> <options>`
 
-`command` can be list, start, stop, or create.
+`command` can be list, start, stop, reboot, or create.
 
 `resource` can be instances, volumes, or snapshots as appropriate.
 
@@ -33,6 +33,8 @@ The profile should have full-access to AWS EC2 (more restrictive permissions pen
 `--tag` is optional, and filters AWS resources by the tag provided (Key:Value).
 
 `--id` specifies the AWS id of the AWS resource.
+
+`--force` to run the command on all resources on the region when no tag or id is specified.
 
 `--region` specifies the AWS region of the resources.
 

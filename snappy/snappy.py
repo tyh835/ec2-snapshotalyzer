@@ -5,6 +5,7 @@ from snappy.client import (
     filter_instances,
     start_instance,
     stop_instance,
+    reboot_instance,
     create_snapshot
 )
 
@@ -108,10 +109,15 @@ def start():
 @start.command('instances')
 @click.option('--tag', default=None, help='Start EC2 instances with the corresponding tag (<Key>:<Value>)')
 @click.option('--id', default=None, help='Start EC2 instance with the specified id')
+@click.option('--force', default=False, is_flag=True, help='Run the command on all resources when no tag or id is specified')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def start_instances(tag, id, **kwargs):
+def start_instances(tag, id, force, **kwargs):
     """Start (all) EC2 instances [options]"""
+    if not tag and not id and not force:
+        print("No tag or id specified. Use --force flag to run command on all instances.")
+        return
+
     ec2 = set_client(**kwargs)
 
     if id:
@@ -142,10 +148,15 @@ def stop():
 @stop.command('instances')
 @click.option('--tag', default=None, help='Stop EC2 instances with the corresponding tag (<Key>:<Value>)')
 @click.option('--id', default=None, help='Stop EC2 instance with the specified id')
+@click.option('--force', default=False, is_flag=True, help='Run the command on all resources when no tag or id is specified')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def stop_instances(tag, id, **kwargs):
+def stop_instances(tag, id, force, **kwargs):
     """Stop (all) EC2 instances [options]"""
+    if not tag and not id and not force:
+        print("No tag or id specified. Use --force flag to run command on all instances.")
+        return
+
     ec2 = set_client(**kwargs)
 
     if id:
@@ -166,6 +177,45 @@ def stop_instances(tag, id, **kwargs):
 ***
 """
 
+@cli.group('reboot')
+def reboot():
+    """Commands for rebooting instances"""
+    pass
+
+
+# reboot instances
+@reboot.command('instances')
+@click.option('--tag', default=None, help='Reboot EC2 instances with the corresponding tag (<Key>:<Value>)')
+@click.option('--id', default=None, help='Reboot EC2 instance with the specified id')
+@click.option('--force', default=False, is_flag=True, help='Run the command on all resources when no tag or id is specified')
+@click.option('--region', default=None, help='Specify the AWS region of the resources.')
+@click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
+def reboot_instances(tag, id, force, **kwargs):
+    """Reboot (all) EC2 instances [options]"""
+    if not tag and not id and not force:
+        print("No tag or id specified. Use --force flag to run command on all instances.")
+        return
+
+    ec2 = set_client(**kwargs)
+
+    if id:
+        reboot_instance(ec2, id=id)
+        return
+
+    instances = filter_instances(ec2, tag)
+
+    for instance in instances:
+        reboot_instance(ec2, instance=instance)
+
+    return
+
+
+"""
+***
+*** Snappy stop commands
+***
+"""
+
 @cli.group('create')
 def create():
     """Commands for creating snapshots"""
@@ -176,10 +226,15 @@ def create():
 @create.command('snapshots')
 @click.option('--tag', default=None, help='Create snapshots of EC2 instances with the corresponding tag (<Key>:<Value>)')
 @click.option('--id', default=None, help='Create snapshots of EC2 instance with specified id')
+@click.option('--force', default=False, is_flag=True, help='Run the command on all resources when no tag or id is specified')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def create_snapshots(tag, id, **kwargs):
+def create_snapshots(tag, id, force, **kwargs):
     """Create snapshots of (all) EC2 instances [options]"""
+    if not tag and not id and not force:
+        print("No tag or id specified. Use --force flag to run command on all instances.")
+        return
+
     ec2 = set_client(**kwargs)
 
     if id:
