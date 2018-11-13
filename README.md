@@ -18,7 +18,54 @@ Use the standard configuration on the AWS CLI. e.g.
 
 and add your Access and Secret keys.
 
-The profile should have full-access to AWS EC2 (more restrictive permissions pending).
+The profile you use with SnapPy should have the following IAM permissions:
+
+- `ec2:DescribeTags`
+- `ec2:DescribeInstances`
+- `ec2:DescribeInstanceAttribute`
+- `ec2:DescribeInstanceStatus`
+- `ec2:DescribeVolumes`
+- `ec2:DescribeVolumeAttribute`
+- `ec2:DescribeVolumeStatus`
+- `ec2:DescribeSnapshots`
+- `ec2:DescribeSnapshotAttribute`
+- `ec2:DescribeClassicLinkInstances`
+- `ec2:StartInstances`
+- `ec2:StopInstances`
+- `ec2:RebootInstances`
+- `ec2:CreateSnapshot`
+
+Or use the following IAM Policy JSON configuration:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "SnapPyPolicy",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:RebootInstances",
+                "ec2:DescribeInstances",
+                "ec2:DescribeTags",
+                "ec2:DescribeSnapshotAttribute",
+                "ec2:DescribeInstanceAttribute",
+                "ec2:DescribeClassicLinkInstances",
+                "ec2:DescribeSnapshots",
+                "ec2:StopInstances",
+                "ec2:DescribeVolumeAttribute",
+                "ec2:DescribeVolumeStatus",
+                "ec2:StartInstances",
+                "ec2:DescribeVolumes",
+                "ec2:CreateSnapshot",
+                "ec2:DescribeInstanceStatus"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+
 
 ## Running
 
