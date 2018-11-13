@@ -17,11 +17,10 @@ def set_client(region=None, profile=None, **kwargs):
 
 def filter_instances(ec2, tag):
     instances = []
-    if tag:
-        tag = tag.split(':')
 
     if tag:
         try:
+            tag = tag.split(':')
             filters = [{'Name':'tag:{0}'.format(tag[0]), 'Values':[tag[1]]}]
             instances = ec2.instances.filter(Filters=filters)
         except:
@@ -35,6 +34,7 @@ def filter_instances(ec2, tag):
 
 def start_instance(ec2, id=None, instance=None):
     instance = instance or ec2.Instance(id)
+
     try:
         print('Starting {0}...'.format(instance.id))
         instance.start()
@@ -46,6 +46,7 @@ def start_instance(ec2, id=None, instance=None):
 
 def stop_instance(ec2, id=None, instance=None):
     instance = instance or ec2.Instance(id)
+
     try:
         print('Stopping {0}...'.format(instance.id))
         instance.stop()
@@ -57,6 +58,7 @@ def stop_instance(ec2, id=None, instance=None):
 
 def create_snapshot(ec2, id=None, instance=None):
     instance = instance or ec2.Instance(id)
+
     try:
         instance.stop()
         print('Stopping {0}...'.format(instance.id))
