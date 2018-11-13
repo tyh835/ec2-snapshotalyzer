@@ -11,7 +11,7 @@ from snappy.client import (
 
 
 @click.group('cli')
-@click.version_option(version='0.2.2')
+@click.version_option(version='0.2.3')
 def cli():
     """
     Snappy manages EC2 instances and EBS snapshots
