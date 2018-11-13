@@ -1,4 +1,4 @@
-from snappy.snappy import cli
+from snappy.cli import cli
 
 if __name__ == '__main__':
     cli()
