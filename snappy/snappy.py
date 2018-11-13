@@ -173,7 +173,7 @@ def stop_instances(tag, id, force, **kwargs):
 
 """
 ***
-*** Snappy stop commands
+*** Snappy reboot commands
 ***
 """
 
@@ -212,7 +212,7 @@ def reboot_instances(tag, id, force, **kwargs):
 
 """
 ***
-*** Snappy stop commands
+*** Snappy create commands
 ***
 """
 

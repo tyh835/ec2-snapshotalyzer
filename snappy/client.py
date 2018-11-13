@@ -70,11 +70,22 @@ def reboot_instance(ec2, id=None, instance=None):
 
 def create_snapshot(ec2, id=None, instance=None):
     instance = instance or ec2.Instance(id)
+    all_pending = all(has_pending_snapshots(volume) for volume in list(instance.volumes.all()))
+    is_stopped = False
 
     try:
-        instance.stop()
-        print('Stopping {0}...'.format(instance.id))
-        instance.wait_until_stopped()
+        if all_pending:
+            print(' Skipping {0}, snapshot already in progress'.format(instance.id))
+            print('\nSuccess')
+            return
+
+        if instance.state['Name'] == 'stopped':
+            is_stopped = True
+
+        else:
+            instance.stop()
+            print('Stopping {0}...'.format(instance.id))
+            instance.wait_until_stopped()
 
         for volume in instance.volumes.all():
             if has_pending_snapshots(volume):
@@ -84,10 +95,12 @@ def create_snapshot(ec2, id=None, instance=None):
             print(' Creating snapshot of {0}...'.format(volume.id))
             volume.create_snapshot(Description='Created by Snappy')
 
-        instance.start()
-        print('Restarting {0}...'.format(instance.id))
-        instance.wait_until_running()
-        print('Success')
+        if not is_stopped:
+            instance.start()
+            print('Restarting {0}...'.format(instance.id))
+            instance.wait_until_running()
+
+        print('\nSuccess')
 
     except ClientError as err:
         print(' Failed to create snapshot of {0}. '.format(instance.id) + str(err))
