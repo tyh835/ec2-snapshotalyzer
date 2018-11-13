@@ -1,7 +1,6 @@
 import boto3
 import botocore
 
-
 def set_client(region=None, profile=None, **kwargs):
     session = boto3.Session()
     ec2 = session.resource('ec2')
@@ -15,7 +14,7 @@ def set_client(region=None, profile=None, **kwargs):
     return ec2
 
 
-def filter_instances(tag, ec2):
+def filter_instances(ec2, tag):
     instances = []
     if tag:
         tag = tag.split(':')
@@ -62,7 +61,7 @@ def create_snapshot(ec2, id=None, instance=None):
         print('Stopping {0}...'.format(instance.id))
         instance.wait_until_stopped()
         for volume in instance.volumes.all():
-            print('Creating snapshot {0}...'.format(volume.id))
+            print('Creating snapshot of {0}...'.format(volume.id))
             volume.create_snapshot(Description='Created by Snappy')
         instance.start()
         print('Restarting {0}...'.format(instance.id))

@@ -38,7 +38,7 @@ def ls():
 def list_instances(tag, **kwargs):
     """List EC2 instances [options]"""
     ec2 = set_client(**kwargs)
-    instances = filter_instances(tag, ec2)
+    instances = filter_instances(ec2, tag)
 
     print_instances(instances)
 
@@ -59,7 +59,7 @@ def list_volumes(tag, id, **kwargs):
     if id:
         instances = [ec2.Instance(id)]
     else:
-        instances = filter_instances(tag, ec2)
+        instances = filter_instances(ec2, tag)
 
     print_volumes(instances)
 
@@ -80,7 +80,7 @@ def list_snapshots(tag, id=None, **kwargs):
     if id:
         instances = [ec2.Instance(id)]
     else:
-        instances = filter_instances(tag, ec2)
+        instances = filter_instances(ec2, tag)
 
     print_snapshots(instances)
 
@@ -107,7 +107,7 @@ def start():
 def start_instances(tag, **kwargs):
     """Start (all) EC2 instances [options]"""
     ec2 = set_client(**kwargs)
-    instances = filter_instances(tag, ec2)
+    instances = filter_instances(ec2, tag)
 
     for instance in instances:
         start_instance(ec2, instance=instance)
@@ -153,7 +153,7 @@ def stop():
 def stop_instances(tag, **kwargs):
     """Stop (all) EC2 instances [options]"""
     ec2 = set_client(**kwargs)
-    instances = filter_instances(tag, ec2)
+    instances = filter_instances(ec2, tag)
 
     for instance in instances:
         stop_instance(ec2, instance=instance)
@@ -191,36 +191,24 @@ def create():
     pass
 
 
-# create snapshots
+# create snapshots [--id]
 @create.command('snapshots')
 @click.option('--tag', default=None, help='Create snapshots of EC2 instances with the corresponding tag (<Key>:<Value>)')
+@click.option('--id', default=None, help='Create snapshots of EC2 instance with specified id')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def create_snapshots(tag, **kwargs):
+def create_snapshots(tag, id, **kwargs):
     """Create snapshots of (all) EC2 instances [options]"""
     ec2 = set_client(**kwargs)
-    instances = filter_instances(tag, ec2)
+
+    if id:
+        create_snapshot(ec2, id=id)
+        return
+
+    instances = filter_instances(ec2, tag)
 
     for instance in instances:
         create_snapshot(ec2, instance=instance)
-
-    return
-
-
-# create snapshot --id
-@create.command('snapshot')
-@click.option('--id', default=None, help='Create snapshot of EC2 instance with specified id')
-@click.option('--region', default=None, help='Specify the AWS region of the resources.')
-@click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def create_snapshot_by_id(id, **kwargs):
-    """Create snapshots of a specific EC2 instance by id [options]"""
-    if not id:
-        print('Error: --id is a required option')
-        return
-
-    ec2 = set_client(**kwargs)
-
-    create_snapshot(ec2, id=id)
 
     return
 
