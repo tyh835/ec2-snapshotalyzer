@@ -11,7 +11,7 @@ from snappy.client import (
 
 
 @click.group('cli')
-@click.version_option(version='0.2.1')
+@click.version_option(version='0.2.2')
 def cli():
     """
     SnapPy manages EC2 instances and EBS snapshots
@@ -51,7 +51,7 @@ def list_instances(tag, **kwargs):
 # list volumes
 @ls.command('volumes')
 @click.option('--tag', default=None, help='Show volumes of EC2 instances with the corresponding tag (<Key>:<Value>)')
-@click.option('--id', default=None, help='Show volumes of EC2 instance with the specified id')
+@click.option('--instance-id', 'id', default=None, help='Show volumes of EC2 instance with the specified id')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def list_volumes(tag, id, **kwargs):
@@ -72,7 +72,7 @@ def list_volumes(tag, id, **kwargs):
 # list snapshots
 @ls.command('snapshots')
 @click.option('--tag', default=None, help='Show the most recent snapshot of EC2 instances with the corresponding tag (<Key>:<Value>)')
-@click.option('--id', default=None, help='Show the most recent snapshot of EC2 instance with the specified id')
+@click.option('--instance-id', 'id', default=None, help='Show the most recent snapshot of EC2 instance with the specified id')
 @click.option('--all', 'list_all', default=False, is_flag=True, help='Show all snapshots for each EC2 instance, not just the most recent')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
@@ -224,7 +224,7 @@ def create():
 # create snapshots [--id]
 @create.command('snapshots')
 @click.option('--tag', default=None, help='Create snapshots of EC2 instances with the corresponding tag (<Key>:<Value>)')
-@click.option('--id', default=None, help='Create snapshots of EC2 instance with specified id')
+@click.option('--instance-id', 'id', default=None, help='Create snapshots of EC2 instance with specified id')
 @click.option('--force', default=False, is_flag=True, help='Run the command on all resources when no tag or id is specified')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
