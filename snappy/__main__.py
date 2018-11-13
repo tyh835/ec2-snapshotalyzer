@@ -53,13 +53,13 @@ def list_instances(tag, **kwargs):
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def list_volumes(tag, id, **kwargs):
     """List EBS volumes [options]"""
-    instances = []
     ec2 = set_client(**kwargs)
 
     if id:
-        instances = [ec2.Instance(id)]
-    else:
-        instances = filter_instances(ec2, tag)
+        print_volumes([ec2.Instance(id)])
+        return
+
+    instances = filter_instances(ec2, tag)
 
     print_volumes(instances)
 
@@ -75,13 +75,13 @@ def list_volumes(tag, id, **kwargs):
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def list_snapshots(tag, id, list_all, **kwargs):
     """List EBS snapshots [options]"""
-    instances = []
     ec2 = set_client(**kwargs)
 
     if id:
-        instances = [ec2.Instance(id)]
-    else:
-        instances = filter_instances(ec2, tag)
+        print_snapshots([ec2.Instance(id)], list_all)
+        return
+
+    instances = filter_instances(ec2, tag)
 
     print_snapshots(instances, list_all)
 
@@ -103,33 +103,21 @@ def start():
 # start instances
 @start.command('instances')
 @click.option('--tag', default=None, help='Start EC2 instances with the corresponding tag (<Key>:<Value>)')
+@click.option('--id', default=None, help='Start EC2 instance with the specified id')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def start_instances(tag, **kwargs):
+def start_instances(tag, id, **kwargs):
     """Start (all) EC2 instances [options]"""
     ec2 = set_client(**kwargs)
+
+    if id:
+        start_instance(ec2, id=id)
+        return
+
     instances = filter_instances(ec2, tag)
 
     for instance in instances:
         start_instance(ec2, instance=instance)
-
-    return
-
-
-# start instance --id
-@start.command('instance')
-@click.option('--id', default=None, help='Start EC2 instance with the specified id')
-@click.option('--region', default=None, help='Specify the AWS region of the resources.')
-@click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def start_instance_by_id(id, **kwargs):
-    """Start a specific EC2 instance by id [options]"""
-    if not id:
-        print('Error: --id is a required option')
-        return
-
-    ec2 = set_client(**kwargs)
-
-    start_instance(ec2, id=id)
 
     return
 
@@ -149,33 +137,21 @@ def stop():
 # stop instances
 @stop.command('instances')
 @click.option('--tag', default=None, help='Stop EC2 instances with the corresponding tag (<Key>:<Value>)')
+@click.option('--id', default=None, help='Stop EC2 instance with the specified id')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def stop_instances(tag, **kwargs):
+def stop_instances(tag, id, **kwargs):
     """Stop (all) EC2 instances [options]"""
     ec2 = set_client(**kwargs)
+
+    if id:
+        stop_instance(ec2, id=id)
+        return
+
     instances = filter_instances(ec2, tag)
 
     for instance in instances:
         stop_instance(ec2, instance=instance)
-
-    return
-
-
-# stop instance --id
-@stop.command('instance')
-@click.option('--id', default=None, help='Stop EC2 instance with the specified id')
-@click.option('--region', default=None, help='Specify the AWS region of the resources.')
-@click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def stop_instance_by_id(id, **kwargs):
-    """Start a specific EC2 instance by id [options]"""
-    if not id:
-        print('Error: --id is a required option')
-        return
-
-    ec2 = set_client(**kwargs)
-
-    stop_instance(ec2, id=id)
 
     return
 

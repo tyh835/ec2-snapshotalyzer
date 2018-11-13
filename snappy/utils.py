@@ -43,6 +43,7 @@ def print_snapshots(instances, list_all):
                     s.start_time.strftime('%c'),
                 ]))
 
-            if s.state == 'completed' and not list_all: break
+                if s.state == 'completed' and not list_all:
+                    break
 
     return

@@ -19,7 +19,7 @@ This profile should have full-access to AWS EC2 (more restrictive permissions pe
 `pipenv run python scripts/snappy.py <command> <resource> <options>`
 
 *command* can be list, start, stop, or create.
-*resource* can be instance(s), volume(s), or snapshot(s) as appropriate.
+*resource* can be instances, volumes, or snapshots as appropriate.
 
 ### Options
 
