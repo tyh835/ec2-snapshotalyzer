@@ -1,6 +1,6 @@
 import boto3
 import botocore
-from snappy.utils.utils import has_pending_snapshots
+from snappy.utils import has_pending_snapshots
 
 def set_client(region=None, profile=None, **kwargs):
     session = boto3.Session()
