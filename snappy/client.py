@@ -70,7 +70,8 @@ def reboot_instance(ec2, id=None, instance=None):
 
 def create_snapshot(ec2, id=None, instance=None):
     instance = instance or ec2.Instance(id)
-    all_pending = all(has_pending_snapshots(volume) for volume in list(instance.volumes.all()))
+    print(instance.volumes.all())
+    all_pending = all(has_pending_snapshots(volume) for volume in instance.volumes.all())
     is_stopped = False
 
     try:
