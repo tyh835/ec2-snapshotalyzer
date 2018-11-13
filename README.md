@@ -27,3 +27,4 @@ This profile should have full-access to AWS EC2 (more restrictive permissions pe
 *--id* specifies the AWS id of the AWS resource.
 *--region* specifies the AWS region of the resources.
 *--profile* specifies the AWS profile to use as credentials.
+*--all* is an option for listing snapshots. Lists all snapshots rather than just most recent ones.

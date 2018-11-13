@@ -68,11 +68,12 @@ def list_volumes(tag, id, **kwargs):
 
 # list snapshots
 @ls.command('snapshots')
-@click.option('--tag', default=None, help='Show snapshots of EC2 instances with the corresponding tag (<Key>:<Value>)')
-@click.option('--id', default=None, help='Show snapshots of EC2 instance with the specified id')
+@click.option('--tag', default=None, help='Show the most recent snapshot of EC2 instances with the corresponding tag (<Key>:<Value>)')
+@click.option('--id', default=None, help='Show the most recent snapshot of EC2 instance with the specified id')
+@click.option('--all', 'list_all', default=False, is_flag=True, help='Show all snapshots for each EC2 instance, not just the most recent')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
-def list_snapshots(tag, id=None, **kwargs):
+def list_snapshots(tag, id, list_all, **kwargs):
     """List EBS snapshots [options]"""
     instances = []
     ec2 = set_client(**kwargs)
@@ -82,7 +83,7 @@ def list_snapshots(tag, id=None, **kwargs):
     else:
         instances = filter_instances(ec2, tag)
 
-    print_snapshots(instances)
+    print_snapshots(instances, list_all)
 
     return
 

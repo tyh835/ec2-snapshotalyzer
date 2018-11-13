@@ -30,7 +30,7 @@ def print_volumes(instances):
     return
 
 
-def print_snapshots(instances):
+def print_snapshots(instances, list_all):
     for i in instances:
         for v in i.volumes.all():
             for s in v.snapshots.all():
@@ -42,5 +42,7 @@ def print_snapshots(instances):
                     s.progress,
                     s.start_time.strftime('%c'),
                 ]))
+
+            if s.state == 'completed' and not list_all: break
 
     return
