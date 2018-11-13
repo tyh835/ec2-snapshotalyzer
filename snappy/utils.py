@@ -47,3 +47,9 @@ def print_snapshots(instances, list_all):
                     break
 
     return
+
+
+def has_pending_snapshots(volume):
+    snapshots = list(volume.snapshots.all())
+
+    return snapshots and snapshots[0].state == 'pending'

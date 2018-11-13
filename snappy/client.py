@@ -1,5 +1,6 @@
 import boto3
 import botocore
+from utils import has_pending_snapshots
 
 def set_client(region=None, profile=None, **kwargs):
     session = boto3.Session()
@@ -38,7 +39,7 @@ def start_instance(ec2, id=None, instance=None):
         print('Starting {0}...'.format(instance.id))
         instance.start()
     except botocore.exceptions.ClientError as err:
-        print('Failed to start {0}. '.format(instance.id) + str(err))
+        print(' Failed to start {0}. '.format(instance.id) + str(err))
 
     return
 
@@ -49,7 +50,7 @@ def stop_instance(ec2, id=None, instance=None):
         print('Stopping {0}...'.format(instance.id))
         instance.stop()
     except botocore.exceptions.ClientError as err:
-        print('Failed to stop {0}. '.format(instance.id) + str(err))
+        print(' Failed to stop {0}. '.format(instance.id) + str(err))
 
     return
 
@@ -60,14 +61,20 @@ def create_snapshot(ec2, id=None, instance=None):
         instance.stop()
         print('Stopping {0}...'.format(instance.id))
         instance.wait_until_stopped()
+
         for volume in instance.volumes.all():
-            print('Creating snapshot of {0}...'.format(volume.id))
+            if has_pending_snapshots(volume):
+                print(' Skipping {0}, snapshot already in progress'.format(volume.id))
+
+            print(' Creating snapshot of {0}...'.format(volume.id))
             volume.create_snapshot(Description='Created by Snappy')
+
         instance.start()
         print('Restarting {0}...'.format(instance.id))
         instance.wait_until_running()
         print('Success')
+
     except botocore.exceptions.ClientError as err:
-        print('Failed to create snapshot of {0}. '.format(instance.id) + str(err))
+        print(' Failed to create snapshot of {0}. '.format(instance.id) + str(err))
 
     return
