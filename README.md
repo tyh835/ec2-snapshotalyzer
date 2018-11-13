@@ -1,6 +1,6 @@
 # Snappy
 
-Version: 0.2.3
+Version: 0.2.4
 
 ## About
 
@@ -100,6 +100,6 @@ Then, install the binary using `pip3 install dist/<wheel-file-name-here>.whl`
 
 Or, you can install the binary directly at:
 
-`pip3 install https://s3-us-west-2.amazonaws.com/tyh835-bin/snappy-0.2.3-py3-none-any.whl`
+`pip3 install https://s3-us-west-2.amazonaws.com/tyh835-bin/snappy-0.2.4-py3-none-any.whl`
 
 Then, run `snappy --help` and you are set!
