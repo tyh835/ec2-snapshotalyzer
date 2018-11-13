@@ -40,8 +40,6 @@ def start_instance(ec2, id=None, instance=None):
         instance.start()
     except botocore.exceptions.ClientError as err:
         print('Failed to start {0}. '.format(instance.id) + str(err))
-    except:
-        print('Failed to start {0}. Please ensure that the id is correct and you are using the correct region'.format(instance.id))
 
     return
 
@@ -53,8 +51,6 @@ def stop_instance(ec2, id=None, instance=None):
         instance.stop()
     except botocore.exceptions.ClientError as err:
         print('Failed to stop {0}. '.format(instance.id) + str(err))
-    except:
-        print('Failed to stop {0}... Please ensure that the id is correct and you are using the correct region'.format(instance.id))
 
     return
 
@@ -62,17 +58,17 @@ def stop_instance(ec2, id=None, instance=None):
 def create_snapshot(ec2, id=None, instance=None):
     instance = instance or ec2.Instance(id)
     try:
-        print('Stopping {0}...'.format(instance.id))
         instance.stop()
+        print('Stopping {0}...'.format(instance.id))
         instance.wait_until_stopped()
         for volume in instance.volumes.all():
             print('Creating snapshot {0}...'.format(volume.id))
             volume.create_snapshot(Description='Created by Snappy')
-        print('Restarting {0}...'.format(instance.id))
         instance.start()
+        print('Restarting {0}...'.format(instance.id))
         instance.wait_until_running()
         print('Success')
-    except:
-        print('Failed to create snapshot of {0}... Please ensure that the id is correct and you are using the correct region'.format(instance.id))
+    except botocore.exceptions.ClientError as err:
+        print('Failed to create snapshot of {0}. '.format(instance.id) + str(err))
 
     return
