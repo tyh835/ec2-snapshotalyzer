@@ -6,7 +6,7 @@ Version: 0.2.3
 
 Snappy is a CLI that uses `boto3` to manage AWS EC2 instance snapshots.
 
-## Configuring
+## Configuring for Development
 
 Run `pipenv install` in the file directory.
 
