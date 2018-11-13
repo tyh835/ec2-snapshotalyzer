@@ -32,7 +32,7 @@ def ls():
 
 # list instances
 @ls.command('instances')
-@click.option('--tag', default=None, help='Show only instances for with the corresponding tag (<Key>:<Value>)')
+@click.option('--tag', default=None, help='Show EC2 instances with the corresponding tag (<Key>:<Value>)')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def list_instances(tag, **kwargs):
@@ -47,8 +47,8 @@ def list_instances(tag, **kwargs):
 
 # list volumes
 @ls.command('volumes')
-@click.option('--tag', default=None, help='Show only instances for with the corresponding tag (<Key>:<Value>)')
-@click.option('--id', default=None, help='Show only volumes of specific instance by id')
+@click.option('--tag', default=None, help='Show volumes of EC2 instances with the corresponding tag (<Key>:<Value>)')
+@click.option('--id', default=None, help='Show volumes of EC2 instance with the specified id')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def list_volumes(tag, id, **kwargs):
@@ -68,8 +68,8 @@ def list_volumes(tag, id, **kwargs):
 
 # list snapshots
 @ls.command('snapshots')
-@click.option('--tag', default=None, help='Show only instances for with the corresponding tag (<Key>:<Value>)')
-@click.option('--id', default=None, help='Show only snapshots of specific instance by id')
+@click.option('--tag', default=None, help='Show snapshots of EC2 instances with the corresponding tag (<Key>:<Value>)')
+@click.option('--id', default=None, help='Show snapshots of EC2 instance with the specified id')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def list_snapshots(tag, id=None, **kwargs):
@@ -101,11 +101,11 @@ def start():
 
 # start instances
 @start.command('instances')
-@click.option('--tag', default=None, help='Show only instances for with the corresponding tag (<Key>:<Value>)')
+@click.option('--tag', default=None, help='Start EC2 instances with the corresponding tag (<Key>:<Value>)')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def start_instances(tag, **kwargs):
-    """Start EC2 instances [options]"""
+    """Start (all) EC2 instances [options]"""
     ec2 = set_client(**kwargs)
     instances = filter_instances(tag, ec2)
 
@@ -117,7 +117,7 @@ def start_instances(tag, **kwargs):
 
 # start instance --id
 @start.command('instance')
-@click.option('--id', default=None, help='Start the instance with specified --id (required)')
+@click.option('--id', default=None, help='Start EC2 instance with the specified id')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def start_instance_by_id(id, **kwargs):
@@ -147,11 +147,11 @@ def stop():
 
 # stop instances
 @stop.command('instances')
-@click.option('--tag', default=None, help='Show only instances for with the corresponding tag (<Key>:<Value>)')
+@click.option('--tag', default=None, help='Stop EC2 instances with the corresponding tag (<Key>:<Value>)')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def stop_instances(tag, **kwargs):
-    """Stop EC2 instances [options]"""
+    """Stop (all) EC2 instances [options]"""
     ec2 = set_client(**kwargs)
     instances = filter_instances(tag, ec2)
 
@@ -163,7 +163,7 @@ def stop_instances(tag, **kwargs):
 
 # stop instance --id
 @stop.command('instance')
-@click.option('--id', default=None, help='Stop the instance with specified --id (required)')
+@click.option('--id', default=None, help='Stop EC2 instance with the specified id')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def stop_instance_by_id(id, **kwargs):
@@ -193,11 +193,11 @@ def create():
 
 # create snapshots
 @create.command('snapshots')
-@click.option('--tag', default=None, help='Show only instances for with the corresponding tag (<Key>:<Value>)')
+@click.option('--tag', default=None, help='Create snapshots of EC2 instances with the corresponding tag (<Key>:<Value>)')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def create_snapshots(tag, **kwargs):
-    """Create snapshots of EC2 instances [options]"""
+    """Create snapshots of (all) EC2 instances [options]"""
     ec2 = set_client(**kwargs)
     instances = filter_instances(tag, ec2)
 
@@ -209,11 +209,11 @@ def create_snapshots(tag, **kwargs):
 
 # create snapshot --id
 @create.command('snapshot')
-@click.option('--id', default=None, help='Create snapshot of the instance with specified --id (required)')
+@click.option('--id', default=None, help='Create snapshot of EC2 instance with specified id')
 @click.option('--region', default=None, help='Specify the AWS region of the resources.')
 @click.option('--profile', default=None, help='Specify the AWS profile to use as credentials.')
 def create_snapshot_by_id(id, **kwargs):
-    """Create snapshot of an EC2 instance by id [options]"""
+    """Create snapshots of a specific EC2 instance by id [options]"""
     if not id:
         print('Error: --id is a required option')
         return
