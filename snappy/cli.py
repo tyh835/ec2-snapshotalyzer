@@ -14,7 +14,7 @@ from snappy.client import (
 @click.version_option(version='0.2.2')
 def cli():
     """
-    SnapPy manages EC2 instances and EBS snapshots
+    Snappy manages EC2 instances and EBS snapshots
 
     Append [options] to the end of the command
     """
