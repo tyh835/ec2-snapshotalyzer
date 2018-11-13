@@ -11,7 +11,6 @@ from snappy.client import (
 
 
 @click.group('cli')
-@click.help_option()
 @click.version_option(version='0.2.0')
 def cli():
     """
