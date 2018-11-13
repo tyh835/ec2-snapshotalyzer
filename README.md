@@ -1,26 +1,24 @@
 # SnapPy
 
-Manage AWS EC2 instance snapshots.
-
 ## About
 
 Snappy is a CLI that uses `boto3` to manage AWS EC2 instance snapshots.
 
 ## Installation
 
-Run `pipenv install` in file directory.
+Run `pipenv install` in the file directory.
 
 If you don't yet have `pipenv`, install at [https://pipenv.readthedocs.io/en/latest/](https://pipenv.readthedocs.io/en/latest/)
 
 ## Configuring
 
-Use the configuration procedure from the AWS CLI. e.g.
+Use the standard configuration on the AWS CLI. e.g.
 
 `aws configure`
 
-...and add your Access and Secret keys.
+and add your Access and Secret keys.
 
-This profile should have full-access to AWS EC2 (more restrictive permissions pending).
+The profile should have full-access to AWS EC2 (more restrictive permissions pending).
 
 ## Running
 
