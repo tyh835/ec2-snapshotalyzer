@@ -2,7 +2,8 @@ import boto3
 from botocore.exceptions import ClientError
 from snappy.utils import has_pending_snapshots
 
-def set_client(region=None, profile=None, **kwargs):
+def set_client(profile=None, region=None, **kwargs):
+    """Setup client with specified profile and region"""
     session = boto3.Session(profile_name=profile) if profile else boto3.Session()
     ec2 = session.resource('ec2', region_name=region) if region else session.resource('ec2')
 
@@ -10,6 +11,8 @@ def set_client(region=None, profile=None, **kwargs):
 
 
 def filter_instances(ec2, tag):
+    """Filters EC2 instances by the given tag (Key:Value)"""
+
     instances = []
 
     if tag:
@@ -27,6 +30,8 @@ def filter_instances(ec2, tag):
 
 
 def start_instance(ec2, id=None, instance=None):
+    """Starts an EC2 instance"""
+
     instance = instance or ec2.Instance(id)
 
     try:
@@ -39,6 +44,8 @@ def start_instance(ec2, id=None, instance=None):
 
 
 def stop_instance(ec2, id=None, instance=None):
+    """Stops an EC2 instance"""
+
     instance = instance or ec2.Instance(id)
 
     try:
@@ -51,6 +58,8 @@ def stop_instance(ec2, id=None, instance=None):
 
 
 def reboot_instance(ec2, id=None, instance=None):
+    """Reboots an EC2 instance"""
+
     instance = instance or ec2.Instance(id)
 
     try:
@@ -63,6 +72,8 @@ def reboot_instance(ec2, id=None, instance=None):
 
 
 def create_snapshot(ec2, id=None, instance=None):
+    """Creates snapshots of an EC2 instance"""
+
     instance = instance or ec2.Instance(id)
     print(instance.volumes.all())
     all_pending = all(has_pending_snapshots(volume) for volume in instance.volumes.all())

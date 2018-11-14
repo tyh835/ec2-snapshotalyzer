@@ -1,4 +1,6 @@
 def print_instances(instances):
+    """List EC2 instances"""
+
     for i in instances:
         tags = []
 
@@ -17,6 +19,8 @@ def print_instances(instances):
 
 
 def print_volumes(instances):
+    """Lists EBS volumes"""
+
     for i in instances:
         for v in i.volumes.all():
             print(', '.join([
@@ -31,6 +35,8 @@ def print_volumes(instances):
 
 
 def print_snapshots(instances, list_all):
+    """Lists volume snapshots (most recent or all)"""
+
     for i in instances:
         for v in i.volumes.all():
             for s in v.snapshots.all():
@@ -50,6 +56,7 @@ def print_snapshots(instances, list_all):
 
 
 def has_pending_snapshots(volume):
-    snapshots = list(volume.snapshots.all())
+    """Determines whether a volume has pending snapshots"""
 
+    snapshots = list(volume.snapshots.all())
     return snapshots and snapshots[0].state == 'pending'

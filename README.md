@@ -12,11 +12,7 @@ Run `pipenv install` in the file directory.
 
 If you don't yet have `pipenv`, install at [https://pipenv.readthedocs.io/en/latest/](https://pipenv.readthedocs.io/en/latest/)
 
-Use the standard configuration on the AWS CLI. e.g.
-
-`aws configure`
-
-and add your Access and Secret keys.
+Use the standard configuration on the AWS CLI. e.g. `aws configure` and add your Access and Secret keys.
 
 The profile you use with SnapPy should have the following IAM permissions:
 
