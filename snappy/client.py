@@ -3,14 +3,8 @@ from botocore.exceptions import ClientError
 from snappy.utils import has_pending_snapshots
 
 def set_client(region=None, profile=None, **kwargs):
-    session = boto3.Session()
-    ec2 = session.resource('ec2')
-
-    if profile:
-        session = boto3.Session(profile_name=profile)
-
-    if region:
-        ec2 = session.resource('ec2', region_name=region)
+    session = boto3.Session(profile_name=profile) if profile else boto3.Session()
+    ec2 = session.resource('ec2', region_name=region) if region else session.resource('ec2')
 
     return ec2
 
