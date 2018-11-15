@@ -1,9 +1,9 @@
 from setuptools import setup
-from snappy.constants import version
+from snappy.constants import VERSION 
 
 setup(
     name='snappy',
-    version=version,
+    version=VERSION,
     author='Tony Han',
     author_email='itony9401@live.com',
     description='Snappy is a CLI that uses `boto3` to manage AWS EC2 instance snapshots.',

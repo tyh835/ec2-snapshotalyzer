@@ -1,5 +1,5 @@
 import click
-from snappy.constants import version
+from snappy.constants import VERSION 
 from snappy.utils import print_instances, print_volumes, print_snapshots
 from snappy.client import (
     set_client,
@@ -12,7 +12,7 @@ from snappy.client import (
 
 
 @click.group('cli')
-@click.version_option(version=version)
+@click.version_option(version=VERSION)
 def cli():
     """
     Snappy manages EC2 instances and EBS snapshots

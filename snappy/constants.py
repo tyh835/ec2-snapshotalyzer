@@ -1,1 +1,3 @@
-version = '0.2.4'
+"""Constants for Snappy"""
+
+VERSION = '0.2.4'
