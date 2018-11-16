@@ -1,5 +1,5 @@
 import click
-from snappy.constants import VERSION 
+from snappy.constants import VERSION
 from snappy.utils import print_instances, print_volumes, print_snapshots
 from snappy.client import (
     set_client,
